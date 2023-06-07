@@ -1,4 +1,11 @@
-echo "${DBG}... deploy istio gateway and virtual-service for pinfo on namespace [$NS]"
+#!/bin/bash
+echo "... Loading variables"
+. ./variables.sh
+
+export NS="bookinfo"
+LB_IP=$(kubectl -n kube-system get svc aks-istio-ingressgateway-external -n aks-istio-ingress -o json | jq -r .status.loadBalancer.ingress[0].ip)
+
+echo "${DBG}... deploy istio gateway and virtual-service for bookinfo on namespace [$NS]"
 
 kubectl apply -f - <<EOF
 ---
@@ -31,10 +38,18 @@ spec:
  http:
  - match:
    - uri:
-       prefix: "/"
+       prefix: "/productpage"
+   - uri:
+       prefix: /static
+   - uri:
+       prefix: /login
+   - uri:
+       prefix: /logout
+   - uri:
+       prefix: /api/v1/products
    route:
    - destination:
-       host: "frontend-podinfo.$NS.svc.cluster.local"
+       host: "productpage.$NS.svc.cluster.local"
        port:
-         number: 9898
+         number: 9080
 EOF

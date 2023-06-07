@@ -1,0 +1,12 @@
+apiVersion: telemetry.istio.io/v1alpha1
+kind: Telemetry
+metadata:
+  name: namespace-override
+  namespace: pinfo2
+spec:
+  tracing:
+  - customTags:
+      userId:
+        header:
+          name: userId
+          defaultValue: mmcr

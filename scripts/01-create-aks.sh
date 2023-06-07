@@ -26,3 +26,7 @@ az aks create -g $RESOURCE_GROUP -n $AKS_NAME \
   --enable-workload-identity --generate-ssh-keys
 
 echo "${DBG}... Script completed"
+
+helm get manifest azure-service-mesh-istio-base -n kube-system
+
+helm get manifest azure-service-mesh-istio-discovery -n aks-istio-system > istio-discovery.txt

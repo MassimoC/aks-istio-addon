@@ -14,6 +14,9 @@ Create a basic AKS cluster
 
 ```
 sh ./01-create-aks.sh
+
+kubectl get all -n aks-istio-system
+
 ```
 
 ## Step 2 - Create a demo application
@@ -59,7 +62,22 @@ http://pinfo1.20.13.64.179.nip.io/
 
 # Other
 
+Install kubectl and kubelogin if not present yet
+
 ```
 sudo az aks install-cli --only-show-errors
-`
+```
 
+Install IstioCtl
+```
+curl -sL https://istio.io/downloadIstioctl | sh -
+
+az login --use-device-code
+
+istioctl dashboard zipkin -n aks-istio-system
+```
+
+```
+kubectl label namespace bookinfo istio.io/rev=asm-1-17
+kubectl apply -f ../k8s/bookinfo.yaml -n bookinfo
+```
